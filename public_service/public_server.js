@@ -29,13 +29,14 @@ app.post('/subscribe', (req, res) => {
         .then(response => {
             if (response.status != 201){
                 console.error(`Received error response from subscription service. [statusCode=${response.status}]`)
-                res.status(500).send()
+                res.status(500).send();
             }else{
                 res.status(201).send();
             }
         })
         .catch(error => {
             console.log(`Failed to send subscription request to subscription service. [error=${error}]`);
+            res.status(500).send();
         })
 });
 
