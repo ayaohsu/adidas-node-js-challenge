@@ -2,14 +2,24 @@ version: '3.8'
 
 services:
   public:
+    container_name: public_service
     build: public_service
     expose: 
       - "8080"
     ports: 
       - "49160:8080"
+    networks:
+      - private-network
 
   
   subscription:
+    container_name: subscription_service
     build: subscription_service
     expose: 
       - "8081"
+    networks:
+      - private-network
+
+networks:
+  private-network:
+    driver: bridge
