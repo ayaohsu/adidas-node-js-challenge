@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  public:
+    build: public_service
+    expose: 
+      - "8080"
+    ports: 
+      - "49160:8080"
+
+  
+  subscription:
+    build: subscription_service
+    expose: 
+      - "8081"
