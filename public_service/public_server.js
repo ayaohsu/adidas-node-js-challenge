@@ -10,7 +10,7 @@ app.use(express.json());
 
 
 function handleSubscribeRequest(req, res){
-    console.log(`Received subscribe request. [body=${JSON.stringify(req.body)}]`)
+    console.log(`Received subscription request. [body=${JSON.stringify(req.body)}]`)
     
     requiredKeys = ['firstName','lastName', 'email']
     for (requiredKey of requiredKeys){
@@ -34,7 +34,8 @@ function handleSubscribeRequest(req, res){
     .catch(error => {
         if (error.response.status == HTTP_STATUS_CODE_DUPLICATE_EMAIL_SUBSCRIPTION){
             console.info(`Received subscription request that has duplicate email. [email=${req.body.email}]`)
-            res.status(400).send('Email has been subscribed.');
+            res.statusMessage = 'This email has been subscribed.';
+            res.status(400).send();
         }else{
             console.error(`Failed to create new subscription from subscription service. [statusCode=${error}]`)
             res.status(500).send();
