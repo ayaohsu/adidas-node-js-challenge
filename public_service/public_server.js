@@ -3,6 +3,8 @@ const axios = require('axios');
 
 const PORT = 8080;
 
+const HTTP_STATUS_CODE_DUPLICATE_EMAIL_SUBSCRIPTION = 460;
+
 const app = express();
 app.use(express.json());
 
@@ -26,17 +28,17 @@ app.post('/subscribe', (req, res) => {
     };
 
     axios.post('http://subscription_service:8081/subscribe', requestBodyToSubscriptionService)
-        .then(response => {
-            if (response.status != 201){
-                console.error(`Received error response from subscription service. [statusCode=${response.status}]`)
-                res.status(500).send();
-            }else{
-                res.status(201).send();
-            }
+    .then(response => {
+            res.status(201).send();
         })
         .catch(error => {
-            console.log(`Failed to send subscription request to subscription service. [error=${error}]`);
-            res.status(500).send();
+            if (error.response.status == HTTP_STATUS_CODE_DUPLICATE_EMAIL_SUBSCRIPTION){
+                console.info(`Received subscription request that has duplicate email. [email=${req.body.email}]`)
+                res.status(400).send('Email has been subscribed.');
+            }else{
+                console.error(`Failed to create new subscription from subscription service. [statusCode=${error}]`)
+                res.status(500).send();
+            }
         })
 });
 

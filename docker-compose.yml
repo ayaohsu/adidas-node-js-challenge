@@ -24,7 +24,7 @@ services:
       DB_PORT: 5432
       DB_USER: admin
       DB_PASSWORD: password
-      DB_NAME: postgres
+      DB_NAME: public
 
   db:
     container_name: db
@@ -33,6 +33,7 @@ services:
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=public
     expose:
       - '5432'
     ports:
@@ -40,6 +41,9 @@ services:
     volumes: 
       - db:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    networks:
+      - private-network
+
 volumes:
   db:
     driver: local
